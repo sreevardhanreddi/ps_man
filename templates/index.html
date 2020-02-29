@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<h1 class="text-3xl	mx-auto">Process Viewer</h1>
+<h2>Built with Starlette and psutil</h2>
+
+<div class="m-3"></div>
+
+<div class="container mx-auto">
+
+  <table class="table-auto mx-auto" id="table">
+    <thead>
+      <tr>
+        <th class="border  px-4 py-2">PID</th>
+        <th class="border  px-4 py-2">User</th>
+        <th class="border  px-4 py-2">CPU %</th>
+        <th class="border  px-4 py-2">Memory %</th>
+        <th class="border  px-4 py-2">Name</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyId">
+      <tr>
+        <td class="border px-4 py-2">Intro to CSS</td>
+        <td class="border px-4 py-2">Adam</td>
+        <td class="border px-4 py-2">858</td>
+        <td class="border px-4 py-2">858</td>
+        <td class="border px-4 py-2">858</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  {% endblock body_block %}
+  {% block script_block %}
+  <script>
+  async function getCpuData() {
+    let data = await fetch("/api/cpu/")
+      .then(res => res.json())
+      .then(data => data);
+
+    var TbodyNode = document.getElementById("tbodyId");
+    
+    while (TbodyNode.hasChildNodes()) {
+      TbodyNode.removeChild(TbodyNode.lastChild);
+    }
+    
+
+    let table = document.getElementById("tbodyId");
+
+    for (const process of data) {
+      let tr = document.createElement("tr");
+      table.appendChild(tr);
+      console.log("process --------------->", process);
+      // for (const key in process) {
+      //   let td = document.createElement("td");
+      //   td.innerHTML = process[key];
+      //   console.log("key --------------->", key, process[key]);
+      //   tr.appendChild(td)
+      // ["username", "name", "pid", "cpu_percent", "memory_percent"]
+      // }
+      var td = document.createElement("td");
+      td.innerHTML = process["pid"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["username"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["cpu_percent"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["memory_percent"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["name"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+    }
+    
+  }
+
+  getCpuData();
+
+  setInterval(() => {
+  getCpuData();
+  }, 1500);
+</script>
+{% endblock script_block %}

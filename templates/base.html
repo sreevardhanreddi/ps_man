@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Process Viewer, an app to view running process and resources consumed by them on your machine through a browser">
+    <title>Process Viewer</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background-color: black;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto">
+        {% block body_block %}
+            
+        {% endblock body_block %}
+    </div>
+    
+
+
+
+{% block script_block %}
+    
+{% endblock script_block %}
+    
+</body>
+</html>

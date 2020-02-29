@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/home/ubuntu007/.local/share/virtualenvs/ps_man-EUHW0HOr/bin/python",
+    "python.formatting.provider": "black"
+}
