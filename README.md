@@ -5,5 +5,7 @@
 ### start the app by running
 
 ```console
-uvicorn app:app --reload --port 8888
+uvicorn app:app --port 8888
 ```
+
+![screenshot](./Screenshot.png)

@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 {% block body_block %}
-<h1 class="text-3xl	mx-auto">Process Viewer</h1>
-<h2>Built with Starlette and psutil</h2>
-
+<h1 class="text-3xl	text-center">Process Viewer</h1>
+<h2 class="text-center">Built with Starlette and psutil</h2>
+<hr>
 <div class="m-3"></div>
 
 <div class="container mx-auto">
-
+  <div class="container text-center my-3">
+    <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400  shadow" onclick="getCpuDataInterval()">
+      Sort by CPU %
+    </button>
+    <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400  shadow" onclick="getMemoryDataInterval()">
+      Sort by Memory %
+    </button>
+  </div>
   <table class="table-auto mx-auto" id="table">
     <thead>
       <tr>
@@ -19,29 +26,30 @@
     </thead>
     <tbody id="tbodyId">
       <tr>
-        <td class="border px-4 py-2">Intro to CSS</td>
-        <td class="border px-4 py-2">Adam</td>
-        <td class="border px-4 py-2">858</td>
-        <td class="border px-4 py-2">858</td>
-        <td class="border px-4 py-2">858</td>
+        <td class="border px-4 py-2">-------</td>
+        <td class="border px-4 py-2">-------</td>
+        <td class="border px-4 py-2">-------</td>
+        <td class="border px-4 py-2">-------</td>
+        <td class="border px-4 py-2">-------</td>
       </tr>
     </tbody>
   </table>
+
 </div>
-  {% endblock body_block %}
-  {% block script_block %}
-  <script>
+{% endblock body_block %}
+{% block script_block %}
+<script>
   async function getCpuData() {
     let data = await fetch("/api/cpu/")
       .then(res => res.json())
       .then(data => data);
 
     var TbodyNode = document.getElementById("tbodyId");
-    
+
+    // remove all rows 
     while (TbodyNode.hasChildNodes()) {
       TbodyNode.removeChild(TbodyNode.lastChild);
     }
-    
 
     let table = document.getElementById("tbodyId");
 
@@ -77,13 +85,89 @@
       td.classList.add("border", "px-4", "py-2");
       tr.appendChild(td);
     }
-    
+
   }
 
-  getCpuData();
 
-  setInterval(() => {
-  getCpuData();
-  }, 1500);
+  async function getMemoryData() {
+    let data = await fetch("/api/memory/")
+      .then(res => res.json())
+      .then(data => data);
+
+    var TbodyNode = document.getElementById("tbodyId");
+
+    // remove all rows 
+    while (TbodyNode.hasChildNodes()) {
+      TbodyNode.removeChild(TbodyNode.lastChild);
+    }
+
+    let table = document.getElementById("tbodyId");
+
+    for (const process of data) {
+      let tr = document.createElement("tr");
+      table.appendChild(tr);
+      console.log("process --------------->", process);
+      // for (const key in process) {
+      //   let td = document.createElement("td");
+      //   td.innerHTML = process[key];
+      //   console.log("key --------------->", key, process[key]);
+      //   tr.appendChild(td)
+      // ["username", "name", "pid", "cpu_percent", "memory_percent"]
+      // }
+      var td = document.createElement("td");
+      td.innerHTML = process["pid"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["username"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["cpu_percent"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["memory_percent"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+      var td = document.createElement("td");
+      td.innerHTML = process["name"];
+      td.classList.add("border", "px-4", "py-2");
+      tr.appendChild(td);
+    }
+
+  }
+
+  // getCpuData();
+  // // getMemoryData();
+
+  // setInterval(() => {
+  //   getCpuData();
+  //   // getMemoryData();
+  // }, 1500);
+
+  var cpuInterval;
+  var memoryInterval;
+
+  function getCpuDataInterval() {
+    clearInterval(memoryInterval)
+    clearInterval(cpuInterval)
+
+    cpuInterval = setInterval(() => {
+      getCpuData();
+    }, 1500);
+  }
+
+  function getMemoryDataInterval() {
+    clearInterval(memoryInterval)
+    clearInterval(cpuInterval)
+
+    memoryInterval = setInterval(() => {
+      getMemoryData();
+    }, 1500);
+  }
+
+  getCpuDataInterval();
+
 </script>
 {% endblock script_block %}
